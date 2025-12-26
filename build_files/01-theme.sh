@@ -73,7 +73,6 @@ dnf -y install \
     webp-pixbuf-loader \
     wireplumber \
     wl-clipboard \
-    wlsunset \
     xdg-desktop-portal-gnome \
     xdg-desktop-portal-gtk \
     xdg-user-dirs
@@ -82,7 +81,6 @@ rm -rf /usr/share/doc/just
 dnf install -y --setopt=install_weak_deps=False \
     kf6-kirigami \
     qt6ct \
-    polkit-kde \
     plasma-breeze \
     kf6-qqc2-desktop-style
 
