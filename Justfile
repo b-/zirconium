@@ -1,5 +1,4 @@
 image := env("IMAGE_FULL", "zirconium:latest")
-base_dir := env("BUILD_BASE_DIR", ".")
 filesystem := env("BUILD_FILESYSTEM", "ext4")
 
 iso $image=image:
@@ -33,19 +32,19 @@ bootc *ARGS:
         -v /etc/containers:/etc/containers:Z \
         -v /var/lib/containers:/var/lib/containers:Z \
         -v /dev:/dev \
-        -v "{{base_dir}}:/data" \
+        -v "${BUILD_BASE_DIR:-.}:/data" \
         --security-opt label=type:unconfined_t \
         "{{image}}" bootc {{ARGS}}
 
-disk-image $base_dir=base_dir $filesystem=filesystem:
+disk-image $filesystem=filesystem:
     #!/usr/bin/env bash
-    if [ ! -e "${base_dir}/bootable.img" ] ; then
-        fallocate -l 20G "${base_dir}/bootable.img"
+    if [ ! -e "${BUILD_BASE_DIR:-.}/bootable.img" ] ; then
+        fallocate -l 20G "${BUILD_BASE_DIR:-.}/bootable.img"
     fi
     just bootc install to-disk --via-loopback /data/bootable.img --filesystem "${filesystem}" --wipe
 
 quick-iterate:
     #!/usr/bin/env bash
-    podman build -t zirconium:latest --no-cache .
+    podman build -t zirconium:latest .
     just rootful
-    just disk-image
+    BUILD_BASE_DIR=/tmp just disk-image
