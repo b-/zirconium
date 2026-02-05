@@ -57,6 +57,7 @@ dnf -y install \
     hyfetch \
     input-remapper \
     just \
+    khal \
     nautilus \
     nautilus-python \
     openssh-askpass \
@@ -70,6 +71,7 @@ dnf -y install \
     wireplumber \
     wl-clipboard \
     wl-mirror \
+    wtype \
     xdg-desktop-portal-gnome \
     xdg-desktop-portal-gtk \
     xdg-terminal-exec \
