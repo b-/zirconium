@@ -15,7 +15,8 @@ sed --sandbox -i -e '/gnome_keyring.so/ s/-auth/auth/ ; /gnome_keyring.so/ s/-se
 
 
 # keep in sync with zirconium preset file
-systemctl preset greetd
+systemctl preset greetd.service
+systemctl preset tailscaled.service
 systemctl preset --global chezmoi-init.service
 systemctl preset --global chezmoi-update.timer
 systemctl preset --global dms.service

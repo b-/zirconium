@@ -13,11 +13,10 @@ sed -i 's|#LockLayering.*|LockLayering=true|' /etc/rpm-ostreed.conf
 # keep in sync with zirconium preset file
 systemctl preset auditd.service
 systemctl preset bootc-fetch-apply-updates.service
-systemctl preset brew-setup.service.service
+systemctl preset brew-setup.service
 systemctl preset firewalld.service
 systemctl preset flatpak-preinstall.service
 systemctl preset systemd-resolved.service
 systemctl preset systemd-resolved.service
-systemctl preset systemd-timesyncd
-systemctl preset tailscaled
+systemctl preset systemd-timesyncd.service
 systemctl preset uupd.timer

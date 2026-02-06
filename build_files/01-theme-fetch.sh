@@ -58,6 +58,7 @@ dnf -y install \
     playerctl \
     qt6-qtmultimedia \
     steam-devices \
+    tailscale \
     udiskie \
     webp-pixbuf-loader \
     wireplumber \
@@ -98,17 +99,13 @@ curl -fsSLo - "$(curl -fsSL https://api.github.com/repos/tulilirockz/xdg-termina
 install -Dpm0644 -t "/usr/share/nautilus-python/extensions/" "${XDG_EXT_TMPDIR}"/*/xdg-terminal-exec-nautilus.py
 rm -rf "${XDG_EXT_TMPDIR}"
 
-MAPLE_TMPDIR="$(mktemp -d)"
-LATEST_RELEASE_FONT="$(curl --retry 3 "https://api.github.com/repos/subframe7536/maple-font/releases/latest" | jq '.assets[] | select(.name == "MapleMono-Variable.zip") | .browser_download_url' -rc)"
-curl --retry 3 -fSsLo "${MAPLE_TMPDIR}/maple.zip" "${LATEST_RELEASE_FONT}"
-unzip "${MAPLE_TMPDIR}/maple.zip" -d "/usr/share/fonts/Maple Mono"
-rm -rf "${MAPLE_TMPDIR}"
-
-MAPLE_NF_TMPDIR="$(mktemp -d)"
-LATEST_RELEASE_FONT="$(curl --retry 3 "https://api.github.com/repos/subframe7536/maple-font/releases/latest" | jq '.assets[] | select(.name == "MapleMono-NF.zip") | .browser_download_url' -rc)"
-curl --retry 3 -fSsLo "${MAPLE_NF_TMPDIR}/maple.zip" "${LATEST_RELEASE_FONT}"
-unzip "${MAPLE_NF_TMPDIR}/maple.zip" -d "/usr/share/fonts/Maple Mono NF"
-rm -rf "${MAPLE_NF_TMPDIR}"
+# THIS IS SO ANNOYING
+# It just fails for whatever damn reason, other stuff is going to lock it if it actually fails
+yes | dnf -y install --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release{,-extras,-mesa} || :
+dnf config-manager setopt terra.enabled=0
+dnf config-manager setopt terra-extras.enabled=0
+dnf config-manager setopt terra-mesa.enabled=0
+dnf install -y --enablerepo=terra maple-fonts
 
 # These need to be here because having them on the layers breaks everything
 rm -rf /usr/share/doc/niri

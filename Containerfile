@@ -54,11 +54,41 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     /ctx/build/01-theme-post.sh
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=tmpfs,dst=/var \
+    --mount=type=tmpfs,dst=/tmp \
+    --mount=type=tmpfs,dst=/run \
+    --mount=type=tmpfs,dst=/boot \
     --mount=type=cache,dst=/var/cache/libdnf5 \
-    /ctx/build/02-nvidia.sh
+    /ctx/build/02-nvidia-fetch.sh
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
-    /ctx/build/99-cleanup.sh
+    --mount=type=tmpfs,dst=/var \
+    --mount=type=tmpfs,dst=/tmp \
+    --mount=type=tmpfs,dst=/run \
+    --mount=type=tmpfs,dst=/boot \
+    --network=none \
+    /ctx/build/02-nvidia-post.sh
+
+RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=tmpfs,dst=/var \
+    --mount=type=tmpfs,dst=/tmp \
+    --mount=type=tmpfs,dst=/run \
+    --mount=type=tmpfs,dst=/boot \
+    /ctx/build/99-misc-fetch.sh
+
+RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=tmpfs,dst=/var \
+    --mount=type=tmpfs,dst=/tmp \
+    --mount=type=tmpfs,dst=/run \
+    --mount=type=tmpfs,dst=/boot \
+    --network=none \
+    /ctx/build/99-misc-post.sh
+
+RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=tmpfs,dst=/run \
+    --mount=type=tmpfs,dst=/boot \
+    --network=none \
+    /ctx/build/99-dracut.sh
 
 # RUN usermod -p "$(echo "changeme" | mkpasswd -s)" root
 

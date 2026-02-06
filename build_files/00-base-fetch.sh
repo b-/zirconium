@@ -7,10 +7,6 @@ dnf -y install 'dnf5-command(config-manager)'
 dnf config-manager setopt keepcache=1
 trap 'dnf config-manager setopt keepcache=0' EXIT
 
-dnf config-manager addrepo --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
-dnf config-manager setopt tailscale-stable.enabled=0
-dnf -y install --enablerepo='tailscale-stable' tailscale
-
 # These were manually picked out from a Bluefin comparison with `rpm -qa --qf="%{NAME}\n" `
 dnf -y install \
   -x PackageKit* \
@@ -117,3 +113,11 @@ if [ "$(arch)" != "aarch64" ] ; then
     thermald \
     powerstat
 fi
+
+# THIS IS SO ANNOYING
+# It just fails for whatever damn reason, other stuff is going to lock it if it actually fails
+yes | dnf -y install --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release{,-extras,-mesa} || :
+dnf config-manager setopt terra.enabled=0
+dnf config-manager setopt terra-extras.enabled=0
+dnf config-manager setopt terra-mesa.enabled=0
+
